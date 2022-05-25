@@ -1,6 +1,11 @@
 const fastify = require("fastify")({ logger: true });
-const fileUpload = require('fastify-file-upload')
-fastify.register(fileUpload)
+const fileUpload = require("fastify-file-upload");
+const path = require("path");
+fastify.register(
+  fileUpload({
+    createParentPath: true,
+  }),
+);
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 

@@ -12,6 +12,17 @@ const uploads = async (req, res) => {
     });
   }
 
+  fileArr.forEach(file => {
+    const path = __dirname + "/uploads/" + file.name;
+
+    file.mv(path, err => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      return res.send({ status: "success", path: path });
+    });
+  });
+
   reply.send(fileArr);
 };
 
