@@ -1,22 +1,99 @@
-import User from "../models/user.js"
+import UserController from "../controllers/users.js"
 
 async function routes(fastify, options) {
-  fastify.get("/users", async (req, reply, next) => {
-    const { email, _id } = req.params
+  const User = {
+    type: "object",
+    properties: {
+      email: { type: "string" },
+      _id: { type: "string" },
+      firstname: { type: "string" },
+      secondname: { type: "string" },
+      role: { type: "string" },
+      isActivated: { type: "string" },
+    },
+  }
 
-    const query = {}
+  const Message = {
+    type: "object",
+    properties: { message: { type: "string" } },
+  }
 
-    if (email) query.email = email
-    if (_id) query._id = _id
+  const getUsersOpts = {
+    handler: UserController.getUsers,
+    schema: {
+      response: {
+        200: {
+          type: "array",
+          users: User,
+        },
+      },
+    },
+  }
 
-    try {
-      const users = await User.find(query)
+  fastify.get("/users", getUsersOpts)
 
-      return reply.send({ users })
-    } catch (error) {
-      return reply.send({ error })
-    }
-  })
+  const getUserOpts = {
+    handler: UserController.getUser,
+    schema: {
+      params: {
+        type: "object",
+        required: ["_id"],
+        properties: { _id: { type: "string" } },
+      },
+      response: {
+        200: User,
+      },
+    },
+  }
+
+  fastify.get("/user", getUserOpts)
+
+  const createUserOpts = {
+    handler: UserController.createUser,
+    schema: {
+      body: {
+        type: "object",
+        properties: {
+          email: { type: "string" },
+          role: { type: "string" },
+          password: { type: "string" },
+        },
+      },
+      response: {
+        200: Message,
+      },
+    },
+  }
+
+  fastify.post("/user", createUserOpts)
+
+  const updateUserOpts = {
+    handler: UserController.updateUser,
+    schema: {
+      body:  User ,
+      response: {
+        200: User,
+      },
+    },
+  }
+
+  fastify.put("/user", updateUserOpts)
+
+  const deleteUserOpts = {
+    handler: UserController.deletetUser,
+    schema: {
+      body: {
+        type: "object",
+        required: ["_id"],
+        properties: { _id: { type: "string" } },
+      },
+      response: {
+        200: Message,
+      },
+    },
+  }
+
+  fastify.delete("/user", deleteUserOpts)
 }
 
 export default routes

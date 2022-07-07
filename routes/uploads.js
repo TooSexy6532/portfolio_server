@@ -35,7 +35,7 @@ async function uploadsRoutes(fastify, options) {
     handler: UploadsController.getImages,
     preValidation: [fastify.checkAuth],
     schema: {
-      200: { type: "array", items: { type: "string" } },
+      200: { type: "array", images: { type: "string" } },
     },
   };
 
