@@ -1,34 +1,49 @@
-const fastify = require("fastify")({ logger: true });
-const fileUpload = require("fastify-file-upload");
-const path = require("path");
-fastify.register(
-  fileUpload({
-    createParentPath: true,
-  }),
-);
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
+import fastifyAutoload from "@fastify/autoload";
+import fastifyEnv from "@fastify/env";
+import Fastify from "fastify";
+import mongoose from "mongoose";
+import path from "path";
 
-dotenv.config();
-
-try {
-  mongoose.connect(process.env.CONNECT_DB);
-} catch (e) {
-  console.error(e);
-}
-
-fastify.register(require("@fastify/cors"), {
-  origin: true,
+const fastify = Fastify({
+  logger: true,
 });
 
-fastify.register(helmet, { global: true });
+const fastifyEnvOptions = {
+  dotenv: true,
+  schema: {
+    type: "object",
+    required: ["PORT", "CONNECT_DB", "SALT"],
+    properties: {
+      CONNECT_DB: { type: "string" },
+      PORT: { type: "string", default: 5000 },
+      SALT: { type: "string", default: "super-secret" },
+    },
+  },
+};
 
-fastify.register(require("./router"));
+const start = async () => {
+  try {
+    await fastify.register(fastifyEnv, fastifyEnvOptions);
 
-fastify.listen(3000, function (err, address) {
-  if (err) {
+    await mongoose.connect(fastify.config.CONNECT_DB);
+
+    await fastify.register(fastifyAutoload, {
+      dir: path.join(path.resolve(), "plugins"),
+      options: Object.assign({}),
+    });
+
+    await fastify.register(fastifyAutoload, {
+      dir: path.join(path.resolve(), "routes"),
+      options: Object.assign({ prefix: "/api" }),
+    });
+
+    await fastify.listen({ port: fastify.config.PORT });
+
+    console.log("...");
+  } catch (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-  fastify.log.info(`server listening on ${address}`);
-});
+};
+
+start();

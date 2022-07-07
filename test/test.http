@@ -1,0 +1,50 @@
+### get users
+GET http://localhost:3000/api/users HTTP/1.1
+
+### Login
+POST http://localhost:3000/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "user": {
+  "password": "1",
+  "email": "papkovdmitry@gmail.com"
+  }
+}
+
+### Logout
+POST http://localhost:3000/api/logout HTTP/1.1
+Content-Type: application/json
+
+{
+  "user": {
+  "password": "1",
+  "email": "papkovdmitry@gmail.com"
+  }
+}
+
+### Me
+GET http://localhost:3000/api/me HTTP/1.1
+
+### Upload file
+POST http://localhost:3000/api/upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ./1.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Felete file
+delete http://localhost:3000/api/upload HTTP/1.1
+Content-Type: application/json
+
+{
+  "filename": "1.png"
+}
