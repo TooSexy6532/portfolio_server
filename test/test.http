@@ -41,7 +41,7 @@ Content-Type: image/png
 < ./1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### Felete file
+### Delete file
 delete http://localhost:3000/api/upload HTTP/1.1
 Content-Type: application/json
 

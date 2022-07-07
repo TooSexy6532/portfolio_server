@@ -1,16 +1,12 @@
-import fs from "fs";
+import { readdir, unlink, writeFile } from 'fs/promises';
 import path from "path";
-import { pipeline } from "stream";
-import util from "util";
-const pump = util.promisify(pipeline);
-const fsPromises = fs.promises;
 
 const UploadsController = {
   uploadFile: async function (request, reply) {
     try {
       const data = await request.file();
 
-      const currentFiles = fs.readdirSync(
+      const currentFiles = await readdir(
         path.join(path.resolve(), "/uploads/"),
       );
 
@@ -19,9 +15,9 @@ const UploadsController = {
           "фаил с таким именем уже существует. Удалите существующий фаил если хотите его перезаписать.",
         );
 
-      let filePath = path.join(path.resolve(), "/uploads/", data.filename);
+      const filePath = path.join(path.resolve(), "/uploads/", data.filename);
 
-      await pump(data.file, fs.createWriteStream(filePath));
+      await writeFile(filePath, data.file);
 
       reply.send({ message: "Фаилы успешно загружен" });
     } catch (error) {
@@ -35,20 +31,34 @@ const UploadsController = {
 
       if (!filename) throw new Error("Не указанно имя фаила для удаления");
 
-      const currentFiles = fs.readdirSync(
+      const currentFiles = await readdir(
         path.join(path.resolve(), "/uploads/"),
       );
 
       if (!currentFiles.includes(filename))
         throw new Error("Такого фаила не сществует");
 
-      await fsPromises.unlink(path.join(path.resolve(), "/uploads/", filename));
+      await unlink(path.join(path.resolve(), "/uploads/", filename));
 
       reply.code(200).send({ message: "Фаил успешно удален" });
     } catch (error) {
       throw new Error(error.message);
     }
   },
+
+  getFileList: async function (request, reply) {
+    try {
+      const fileNames = await readdir(path.join(path.resolve(), "/uploads/"));
+
+      const list = []
+
+      for (const file of fileNames) {
+
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 };
 
 export default UploadsController;
