@@ -3,6 +3,7 @@ import fastifyEnv from "@fastify/env";
 import Fastify from "fastify";
 import mongoose from "mongoose";
 import path from "path";
+import initFolders from "./services/initFolders.js";
 
 const fastify = Fastify({
   logger: true,
@@ -14,14 +15,17 @@ const fastifyEnvOptions = {
     type: "object",
     required: ["PORT", "CONNECT_DB", "SALT"],
     properties: {
-      CONNECT_DB: { type: "string" },
+      CONNECT_DB: {
+        type: "string",
+        default: "mongodb://127.0.0.1:27017/your_database_name",
+      },
       PORT: { type: "string", default: 5000 },
-      SALT: { type: "string", default: "super-secret" },
+      SALT: { type: "string", default: "some32CharacterSuperSecretCode" },
     },
   },
 };
 
-const start = async () => {
+const start = async (fastify) => {
   try {
     await fastify.register(fastifyEnv, fastifyEnvOptions);
 
@@ -37,6 +41,8 @@ const start = async () => {
       options: Object.assign({ prefix: "/api" }),
     });
 
+    await initFolders();
+
     await fastify.listen({ port: fastify.config.PORT });
 
     console.log("...");
@@ -46,4 +52,4 @@ const start = async () => {
   }
 };
 
-start();
+start(fastify);
