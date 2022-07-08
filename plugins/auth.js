@@ -1,7 +1,6 @@
 import fstifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fp from 'fastify-plugin';
-import bcrypt from 'bcrypt';
 
 async function auth (fastify, opts) {
   await fastify.register(fstifyCookie);
@@ -9,7 +8,7 @@ async function auth (fastify, opts) {
   await fastify.register(fastifySession, {
     cookieName: "sessionId",
     secret: fastify.config.SALT,
-    cookie: { secure: false },
+    cookie: { secure: true },
     maxAge: 3600 * 8,
   });
 

@@ -19,7 +19,7 @@ async function swaggerGenerator (fastify, opts) {
         url: 'https://github.com/delvedor/fastify-example',
         description: 'Find more info here'
       },
-      host: 'localhost', // and your deployed url
+      host: 'localhost:3000', // and your deployed url
       schemes: ['http', 'https'],
       consumes: ['application/json'],
       produces: ['application/json', 'text/html'],

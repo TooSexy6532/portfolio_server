@@ -6,5 +6,5 @@ async function helmet(fastify, opts) {
 }
 
 export default fp(helmet, {
-  name: "fastifyCors",
+  name: "fastifyHelmet",
 })
