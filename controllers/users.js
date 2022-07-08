@@ -11,16 +11,15 @@ const UserController = {
   },
 
   getUser: async function (request, reply) {
-    const { email, _id } = req.params
+    const { _id } = request.params
 
     const query = {}
 
-    if (email) query.email = email
     if (_id) query._id = _id
 
     try {
-      const users = await User.find(query)
-      return reply.send({ users })
+      const user = await User.findOne(query)
+      return reply.send(user)
     } catch (error) {
       throw new Error(error.message)
     }
@@ -41,7 +40,15 @@ const UserController = {
   },
 
   deletetUser: async function (request, reply) {
+    const { _id } = request.body
+
+    if (!_id)
+      throw new Error("Для удаления пользователя необходимо указать _id")
+
     try {
+      await User.deleteOne({ _id })
+
+      return reply.send({ message: "Пользователь успешно удален" })
     } catch (error) {
       throw new Error(error.message)
     }
