@@ -15,7 +15,7 @@ const AuthController = {
         password,
         currentUser.password
       )
-      
+
       if (!isPasswordValid) throw new Error("Вы указали неверный пароль")
 
       request.session.isAuth = true
@@ -24,7 +24,12 @@ const AuthController = {
         id: currentUser._id,
       }
 
-      return reply.code(200).send({ message: "Вы успешно авторизованы" })
+      return reply
+        .code(200)
+        .send({
+          message: "Вы успешно авторизованы",
+          user: { email: currentUser.email, id: currentUser._id },
+        })
     } catch (error) {
       throw new Error(error.message)
     }

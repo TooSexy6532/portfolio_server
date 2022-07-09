@@ -10,7 +10,13 @@ const loginOptions = {
     response: {
       200: {
         type: "object",
-        properties: { message: { type: "string" } },
+        properties: {
+          message: { type: "string" },
+          user: {
+            type: "object",
+            properties: { id: { type: "string" }, email: { type: "string" } },
+          },
+        },
       },
     },
   },
@@ -28,6 +34,20 @@ const logoutOptions = {
 
 const checkMeOptions = {
   handler: AuthController.checkMe,
+  schema: {
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          isAuth: { type: "boolean" },
+          user: {
+            type: "object",
+            properties: { id: { type: "string" }, email: { type: "string" } },
+          },
+        },
+      },
+    },
+  },
 }
 
 async function authRoutes(fastify, options) {

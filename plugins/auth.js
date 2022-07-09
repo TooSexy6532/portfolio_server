@@ -8,7 +8,7 @@ async function auth (fastify, opts) {
   await fastify.register(fastifySession, {
     cookieName: "sessionId",
     secret: fastify.config.SALT,
-    cookie: { secure: true },
+    cookie: { secure: false },
     maxAge: 3600 * 8,
   });
 
