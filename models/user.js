@@ -15,8 +15,6 @@ const schema = new Schema({
   activationLink: { type: String },
 
   firstname: { type: String },
-
-  secondname: { type: String },
 })
 
 const User = model("User", schema)

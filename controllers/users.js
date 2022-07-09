@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt"
 import User from "../models/user.js"
 
 const UserController = {
@@ -26,14 +27,35 @@ const UserController = {
   },
 
   createUser: async function (request, reply) {
+    const { email, password, role, firstname } = request.body
+
+    const checkEmail = await User.findOne({ email })
+
+    if (checkEmail)
+      throw new Error("Пользователь с такой почтой уже существует")
+
+    const hashedPassword = await bcrypt.hash(password, 3)
+
+    const user = new User({
+      email,
+      password: hashedPassword,
+      role,
+      firstname,
+    })
+
     try {
+      await user.save()
+      return reply.send(user)
     } catch (error) {
       throw new Error(error.message)
     }
   },
 
   updateUser: async function (request, reply) {
+    const { _id, ...obj } = request.body
     try {
+      await User.updateOne({ _id }, obj)
+      return reply.send({ message: 'Данные пользователя обновлены'})
     } catch (error) {
       throw new Error(error.message)
     }
