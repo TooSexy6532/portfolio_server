@@ -65,7 +65,7 @@ const CategoryController = {
     const { _id } = request.body
 
     if (!_id) throw new Error("Для удаления категории необходимо указать _id")
-    F
+    
     try {
       await Category.deleteOne({ _id })
 

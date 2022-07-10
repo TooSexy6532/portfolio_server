@@ -1,10 +1,10 @@
-import UploadsController from "../controllers/uploads.js";
+import UploadsController from "../controllers/uploads.js"
 
 async function uploadsRoutes(fastify, options) {
   const Message = {
     type: "object",
     properties: { message: { type: "string" } },
-  };
+  }
 
   const postImageOpts = {
     handler: UploadsController.uploadImage,
@@ -12,9 +12,7 @@ async function uploadsRoutes(fastify, options) {
     schema: {
       200: Message,
     },
-  };
-
-  fastify.post("/image", postImageOpts);
+  }
 
   const deleteImageOpts = {
     handler: UploadsController.deleteImage,
@@ -27,19 +25,22 @@ async function uploadsRoutes(fastify, options) {
     schema: {
       200: Message,
     },
-  };
-
-  fastify.delete("/image", deleteImageOpts);
+  }
 
   const getImagesOpts = {
     handler: UploadsController.getImages,
-    preValidation: [fastify.checkAuth],
+    // preValidation: [fastify.checkAuth],
     schema: {
       200: { type: "array", images: { type: "string" } },
     },
-  };
+  }
 
-  fastify.get("/images", getImagesOpts);
+  fastify.post("/image", postImageOpts)
+
+  fastify.delete("/image", deleteImageOpts)
+
+  fastify.get("/images", getImagesOpts)
+
 }
 
-export default uploadsRoutes;
+export default uploadsRoutes

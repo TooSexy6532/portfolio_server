@@ -51,10 +51,15 @@ const UploadsController = {
       const list = [];
 
       for (const file of fileNames) {
-        list.push(path.join(UploadsController._imagePath, file));
+
+        const image = {
+          url: path.join('api/images', file),
+          name: file,
+        }
+        list.push(image);
       }
 
-      return reply.code(200).send(list);
+      return reply.code(200).send({ images: list });
     } catch (error) {
       throw new Error(error.message);
     }
