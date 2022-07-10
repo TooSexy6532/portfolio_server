@@ -18,6 +18,7 @@ async function routes(fastify, options) {
 
   const getUsersOpts = {
     handler: UserController.getUsers,
+    preValidation: [fastify.checkAuth],
     schema: {
       response: {
         200: {
@@ -32,6 +33,7 @@ async function routes(fastify, options) {
 
   const getUserOpts = {
     handler: UserController.getUser,
+    preValidation: [fastify.checkAuth],
     schema: {
       params: {
         type: "object",
@@ -47,6 +49,16 @@ async function routes(fastify, options) {
 
   const createUserOpts = {
     handler: UserController.createUser,
+    preValidation: [fastify.checkAuth],
+    body: {
+      type: "object",
+      properties: {
+        email: { type: "string" },
+        firstname: { type: "string" },
+        role: { type: "string" },
+        password: { type: "string" },
+      },
+    },
     schema: {
       response: {
         200: User,
@@ -58,12 +70,26 @@ async function routes(fastify, options) {
 
   const updateUserOpts = {
     handler: UserController.updateUser,
+    preValidation: [fastify.checkAuth],
+    schema: {
+      body: User,
+      response: {
+        200: Message,
+      },
+    },
   }
 
   fastify.put("/user", updateUserOpts)
 
   const deleteUserOpts = {
     handler: UserController.deletetUser,
+    preValidation: [fastify.checkAuth],
+    schema: {
+      body: { type: "object", properties: { _id: { type: "string" } } },
+      response: {
+        200: Message,
+      },
+    },
   }
 
   fastify.delete("/user", deleteUserOpts)

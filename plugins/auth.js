@@ -15,7 +15,7 @@ async function auth (fastify, opts) {
   // Декоратор для проверки авторизации в маршрутах.
   await fastify.decorate("checkAuth", async function (request, reply) {
     if (request.session.isAuth !== true) {
-      reply.send({ message: "Нужна авторизация" }).code(403);
+      reply.code(403).send({ message: "Нужна авторизация" });
     }
   });
 }
