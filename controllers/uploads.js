@@ -1,69 +1,81 @@
-import { readdir, unlink, writeFile } from "fs/promises";
-import path from "path";
+import { readdir, unlink, writeFile } from "fs/promises"
+import path from "path"
 
 const UploadsController = {
   _imagePath: "/uploads/images",
 
   uploadImage: async function (request, reply) {
     try {
-      const data = await request.file();
-      
-      const currentFiles = await readdir(path.join(path.resolve(), UploadsController._imagePath));
+      const data = await request.file()
+
+      const currentFiles = await readdir(
+        path.join(path.resolve(), UploadsController._imagePath)
+      )
 
       if (currentFiles.includes(data.filename))
         throw new Error(
-          "Фаил с таким именем уже существует. Удалите существующий фаил если хотите его перезаписать.",
-        );
+          "Фаил с таким именем уже существует. Удалите существующий фаил если хотите его перезаписать."
+        )
 
-      const filePath = path.join(path.resolve(), UploadsController._imagePath, data.filename);
-      
-      await writeFile(filePath, data.file);
+      const filePath = path.join(
+        path.resolve(),
+        UploadsController._imagePath,
+        data.filename
+      )
 
-      return reply.send({ message: "Фаилы успешно загружен" });
+      await writeFile(filePath, data.file)
+
+      return reply.send({ message: "Фаилы успешно загружен" })
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   },
 
   deleteImage: async function (request, reply) {
     try {
-      const { filename } = request.body;
+      const { filename } = request.body
 
-      if (!filename) throw new Error("Не указанно имя фаила для удаления");
+      if (!filename) throw new Error("Не указанно имя фаила для удаления")
 
-      const currentFiles = await readdir(path.join(path.resolve(), UploadsController._imagePath));
+      const currentFiles = await readdir(
+        path.join(path.resolve(), UploadsController._imagePath)
+      )
 
       if (!currentFiles.includes(filename))
-        throw new Error("Такого фаила не сществует");
+        throw new Error("Такого фаила не сществует")
 
-      await unlink(path.join(path.resolve(), UploadsController._imagePath, filename));
+      await unlink(
+        path.join(path.resolve(), UploadsController._imagePath, filename)
+      )
 
-      return reply.code(200).send({ message: "Фаил успешно удален" });
+      return reply.code(200).send({ message: "Фаил успешно удален" })
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   },
 
   getImages: async function (request, reply) {
     try {
-      const fileNames = await readdir(path.join(path.resolve(), UploadsController._imagePath));
+      const fileNames = await readdir(
+        path.join(path.resolve(), UploadsController._imagePath)
+      )
 
-      const list = [];
+      const list = []
 
       for (const file of fileNames) {
-
         const image = {
-          url: path.join('api/images', file),
+          fullUrl: path.join(process.env.APP_URL + "/api/images" + file),
+          url: path.join("api/images", file),
           name: file,
         }
-        list.push(image);
+        list.push(image)
       }
 
-      return reply.code(200).send({ images: list });
+      return reply.code(200).send({ images: list })
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   },
-};
+}
 
-export default UploadsController;
+export default UploadsController
