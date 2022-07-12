@@ -6,7 +6,7 @@ async function cors(fastify, opts) {
   fastify.register(fastifyCors, (instance) => {
     return (req, callback) => {
       const corsOptions = {
-        origin: false
+        origin: true
       };
       callback(null, corsOptions)
     }

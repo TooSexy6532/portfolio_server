@@ -10,16 +10,28 @@ async function routes(fastify, options) {
     type: "object",
     properties: {
       _id: { type: "string" },
-      name: { type: "string" },
+      title: { type: "string" },
       description: { type: "string" },
+      alias: { type: "string" },
+      content: { type: "string" },
+      heroImage: { type: "string" },
+      previewImage: { type: "string" },
+      showOnMainPage: { type: "string" },
+      category: { type: "string" },
     },
   }
 
   const NewProject = {
     type: "object",
     properties: {
-      name: { type: "string" },
+      title: { type: "string" },
       description: { type: "string" },
+      content: { type: "string" },
+      alias: { type: "string" },
+      heroImage: { type: "string" },
+      previewImage: { type: "string" },
+      showOnMainPage: { type: "string" },
+      category: { type: "string" },
     },
   }
 
@@ -74,7 +86,7 @@ async function routes(fastify, options) {
   }
 
   const deleteProjectOpts = {
-    handler: ProjectsController.deletetProject,
+    handler: ProjectsController.deleteProject,
     preValidation: [fastify.checkAuth],
     schema: {
       body: { type: "object", properties: { _id: { type: "string" } } },
