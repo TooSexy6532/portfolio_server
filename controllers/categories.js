@@ -2,7 +2,7 @@ import Category from "../models/category.js"
 
 const CategoryController = {
   getCategories: async function (request, reply) {
-    const { search } = request.params
+    const { search } = request.query
 
     const query = {}
 
@@ -17,7 +17,7 @@ const CategoryController = {
   },
 
   getCategory: async function (request, reply) {
-    const { _id } = request.params
+    const { _id } = request.query
 
     const query = {}
 

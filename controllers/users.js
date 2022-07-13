@@ -12,7 +12,7 @@ const UserController = {
   },
 
   getUser: async function (request, reply) {
-    const { _id } = request.params
+    const { _id } = request.query
 
     const query = {}
 

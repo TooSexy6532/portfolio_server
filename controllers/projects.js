@@ -2,11 +2,12 @@ import Project from "../models/project.js"
 
 const ProjectController = {
   getProjects: async function (request, reply) {
-    const { search } = request.params
+    const { search, showOnMainPage } = request.query
 
     const query = {}
 
-    query.search = search
+    if (search) query.search = search
+    if (showOnMainPage) query.showOnMainPage = showOnMainPage
 
     try {
       const projects = await Project.find(query)
@@ -17,7 +18,7 @@ const ProjectController = {
   },
 
   getProject: async function (request, reply) {
-    const { _id } = request.params
+    const { _id } = request.query
 
     const query = {}
 
@@ -46,7 +47,7 @@ const ProjectController = {
       await project.save()
       return reply.send({ project })
     } catch (error) {
-      throw new Error({ error: error.message })
+      throw new Error(error.message)
     }
   },
 
