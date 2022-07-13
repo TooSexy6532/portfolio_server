@@ -64,7 +64,6 @@ const UploadsController = {
 
       for (const file of fileNames) {
         const image = {
-          fullUrl: path.join(process.env.APP_URL + "/api/images" + file),
           url: path.join("api/images", file),
           name: file,
         }

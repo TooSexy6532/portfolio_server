@@ -26,7 +26,7 @@ const init = async () => {
     const hashedPassword = await bcrypt.hash("1", 3)
 
     const newUser = new User({
-      email: "papkovdmitry@gmail.com",
+      email: "test@test.test",
       role: "Administrator",
       password: hashedPassword,
       isActivated: true,
